@@ -29,6 +29,12 @@ public class DividaController {
         return dividaService.listarTodas();
     }
 
+    @GetMapping("/{id}")
+    public DividaModel buscarPorId(@PathVariable Long id){
+        return dividaService.buscarPorId(id);
+    }
+
+
 
 
 }
