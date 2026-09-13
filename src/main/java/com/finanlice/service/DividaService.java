@@ -29,17 +29,8 @@ public class DividaService {
             .orElseThrow(() -> new RuntimeException("Dívida não encontrada"));
     }
 
-    public DividaModel atualizar (Long id, @NonNull DividaModel novaDivida){
-        DividaModel dividaExistente = dividaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dívida não encontrada!"));
-
-
-        dividaExistente.setDescricao(novaDivida.getDescricao());
-        dividaExistente.setValor(novaDivida.getValor());
-        dividaExistente.setVencimento(novaDivida.getVencimento());
-        dividaExistente.setStatus(novaDivida.getStatus());
-
-        return dividaRepository.save(dividaExistente);
+    public DividaModel atualizar(Long id, @NonNull DividaModel novaDivida) {
+        return null;
     }
 
     public void deletar (Long id){
