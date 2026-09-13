@@ -24,6 +24,11 @@ public class DividaController {
         return dividaService.salvar(divida);
     }
 
+    @GetMapping
+    public List<DividaModel> listarTodas(){
+        return dividaService.listarTodas();
+    }
+
 
 
 }
