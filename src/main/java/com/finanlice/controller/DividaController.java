@@ -3,10 +3,8 @@ package com.finanlice.controller;
 
 import com.finanlice.model.DividaModel;
 import com.finanlice.service.DividaService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/dividas")
@@ -34,6 +32,15 @@ public class DividaController {
         return dividaService.buscarPorId(id);
     }
 
+    @PutMapping("/{id}")
+    public DividaModel atualizar(@PathVariable Long id, @RequestBody DividaModel novaDivida){
+        return dividaService.atualizar(id, novaDivida);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id){
+        dividaService.deletar(id);
+    }
 
 
 
