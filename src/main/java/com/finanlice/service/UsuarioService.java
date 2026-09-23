@@ -28,4 +28,15 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
+    public UsuarioModel atualizar(Long id, UsuarioModel novoUsuario){
+        UsuarioModel usuarioExistente = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        usuarioExistente.setNome(novoUsuario.getNome());
+        usuarioExistente.setEmail(novoUsuario.getEmail());
+        usuarioExistente.setSenha(novoUsuario.getSenha());
+
+        return usuarioRepository.save(usuarioExistente);
+    }
+
 }
