@@ -3,6 +3,7 @@ package com.finanlice.service;
 import com.finanlice.model.UsuarioModel;
 import com.finanlice.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 
 @Service
@@ -16,6 +17,10 @@ public class UsuarioService {
 
     public UsuarioModel salvar(UsuarioModel usuario){
         return usuarioRepository.save(usuario);
+    }
+
+    public List<UsuarioModel> listarTodos(){
+        return usuarioRepository.findAll();
     }
 
 }
