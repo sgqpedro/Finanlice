@@ -19,7 +19,8 @@ public class DividaModel{
     private String descricao;
 
     private BigDecimal valor;
-
+    private BigDecimal valorPago;
+    private String categoria;
     private LocalDate vencimento;
 
     private String status;
@@ -49,6 +50,20 @@ public class DividaModel{
     public BigDecimal getValor(){return valor;}
 
     public void setValor(BigDecimal valor){ this.valor = valor;}
+
+    public BigDecimal getValorPago(){
+        return valorPago;
+    }
+
+    public void setValorPago (BigDecimal valorPago){this.valorPago = valorPago;}
+
+    public String getCategoria(){
+        return categoria;
+    }
+
+    public void setCategoria(String categoria){
+        this.categoria = categoria;
+    }
 
     public LocalDate getVencimento(){return vencimento;}
 
