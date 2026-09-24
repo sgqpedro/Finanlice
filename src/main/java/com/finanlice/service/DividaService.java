@@ -25,7 +25,7 @@ public class DividaService {
         return dividaRepository.findAll();
     }
 
-    public DividaModel buscaPorId (Long id){return dividaRepository.findById(id)
+    public DividaModel buscarPorId(Long id){return dividaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Dívida não encontrada"));
     }
 
