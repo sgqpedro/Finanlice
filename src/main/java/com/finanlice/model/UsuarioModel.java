@@ -24,6 +24,9 @@ public class UsuarioModel {
     @OneToMany(mappedBy = "usuario")
     private List<DividaModel> dividas;
 
+    @OneToMany(mappedBy = "usuario")
+    private List<receitaModel> receitas;
+
     public UsuarioModel(){}
 
     public UsuarioModel(Long id, String nome, String email, String senha){

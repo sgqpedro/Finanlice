@@ -30,7 +30,17 @@ public class DividaService {
     }
 
     public DividaModel atualizar(Long id, @NonNull DividaModel novaDivida) {
-        return null;
+        DividaModel dividaExistente = dividaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dívida não encontrada"));
+
+        dividaExistente.setDescricao(novaDivida.getDescricao());
+        dividaExistente.setValor(novaDivida.getValor());
+        dividaExistente.setValorPago(novaDivida.getValorPago());
+        dividaExistente.setCategoria(novaDivida.getCategoria());
+        dividaExistente.setVencimento(novaDivida.getCategoria());
+        dividaExistente.setStatus(novaDivida.getStatus());
+
+        return dividaRepository.save(dividaExistente);
     }
 
     public void deletar (Long id){
@@ -39,8 +49,5 @@ public class DividaService {
         }
 
         dividaRepository.deleteById(id);
-    }
-
-    public DividaModel buscarPorId(Long id) {
     }
 }
