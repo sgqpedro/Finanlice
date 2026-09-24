@@ -24,4 +24,15 @@ public class receitaModel {
     @JoinColumn(name = "usuario_id")
     private UsuarioModel usuario;
 
+    public ReceitaModel() {
+    }
+
+    public ReceitaModel(Long id, String nome, BigDecimal valorReceita, String tipo, LocalDate dataRecebimento) {
+        this.id = id;
+        this.nome = nome;
+        this.valorReceita = valorReceita;
+        this.tipo = tipo;
+        this.dataRecebimento = dataRecebimento;
+    }
+
 }
