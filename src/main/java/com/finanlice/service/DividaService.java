@@ -40,7 +40,4 @@ public class DividaService {
 
         dividaRepository.deleteById(id);
     }
-
-    public DividaModel buscarPorId(Long id) {
-    }
 }
