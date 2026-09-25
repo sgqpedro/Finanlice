@@ -37,7 +37,7 @@ public class DividaService {
         dividaExistente.setValor(novaDivida.getValor());
         dividaExistente.setValorPago(novaDivida.getValorPago());
         dividaExistente.setCategoria(novaDivida.getCategoria());
-        dividaExistente.setVencimento(novaDivida.getCategoria());
+        dividaExistente.setVencimento(novaDivida.getVencimento());
         dividaExistente.setStatus(novaDivida.getStatus());
 
         return dividaRepository.save(dividaExistente);

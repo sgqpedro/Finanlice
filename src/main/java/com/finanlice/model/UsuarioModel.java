@@ -1,7 +1,6 @@
 package com.finanlice.model;
 
 import jakarta.persistence.*;
-import org.springframework.context.SmartLifecycle;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class UsuarioModel {
     private List<DividaModel> dividas;
 
     @OneToMany(mappedBy = "usuario")
-    private List<receitaModel> receitas;
+    private List<ReceitaModel> receitas;
 
     public UsuarioModel(){}
 
