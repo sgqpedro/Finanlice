@@ -35,4 +35,40 @@ public class receitaModel {
         this.dataRecebimento = dataRecebimento;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public BigDecimal getValorReceita() {
+        return valorReceita;
+    }
+
+    public void setValorReceita(BigDecimal valorReceita) {
+        this.valorReceita = valorReceita;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public LocalDate getDataRecebimento() {
+        return dataRecebimento;
+    }
+
+    public void setDataRecebimento(LocalDate dataRecebimento) {
+        this.dataRecebimento = dataRecebimento;
+    }
+
 }
