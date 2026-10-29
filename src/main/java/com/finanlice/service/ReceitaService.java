@@ -47,6 +47,8 @@ public class ReceitaService {
         if (!receitaRepository.existsById(id)){
             throw new RuntimeException("Receita não encontrada");
         }
+
+        receitaRepository.deleteById(id);
     }
 
 
