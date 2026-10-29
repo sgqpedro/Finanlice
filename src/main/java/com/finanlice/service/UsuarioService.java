@@ -2,7 +2,10 @@ package com.finanlice.service;
 
 import com.finanlice.model.UsuarioModel;
 import com.finanlice.repository.UsuarioRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 
@@ -25,12 +28,14 @@ public class UsuarioService {
 
     public UsuarioModel buscarPorId(Long id){
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException
+                        (HttpStatus.NOT_FOUND, "Usuário não encontrado"));
     }
 
     public UsuarioModel atualizar(Long id, UsuarioModel novoUsuario){
         UsuarioModel usuarioExistente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException
+                        (HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         usuarioExistente.setNome(novoUsuario.getNome());
         usuarioExistente.setEmail(novoUsuario.getEmail());
@@ -41,7 +46,8 @@ public class UsuarioService {
 
     public void deletar(Long id){
         if (!usuarioRepository.existsById(id)){
-            throw new RuntimeException("Usuário não encontrado");
+            throw new ResponseStatusException
+                    (HttpStatus.NOT_FOUND, "Usuário não encontrado");
 
         }
         

@@ -3,7 +3,10 @@ package com.finanlice.service;
 
 import com.finanlice.model.ReceitaModel;
 import com.finanlice.repository.ReceitaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 
@@ -32,7 +35,7 @@ public class ReceitaService {
     public ReceitaModel atualizar(Long id, ReceitaModel novaReceita) {
 
         ReceitaModel receitaExistente = receitaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Receita não encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
 
         receitaExistente.setNome(novaReceita.getNome());
         receitaExistente.setValorReceita(novaReceita.getValorReceita());
@@ -45,7 +48,7 @@ public class ReceitaService {
 
     public void deletar(Long id){
         if (!receitaRepository.existsById(id)){
-            throw new RuntimeException("Receita não encontrada");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada");
         }
 
         receitaRepository.deleteById(id);

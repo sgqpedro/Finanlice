@@ -4,7 +4,11 @@ package com.finanlice.service;
 import com.finanlice.model.DividaModel;
 import com.finanlice.repository.DividaRepository;
 import org.jspecify.annotations.NonNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @Service
@@ -26,12 +30,14 @@ public class DividaService {
     }
 
     public DividaModel buscarPorId(Long id){return dividaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Dívida não encontrada"));
+            .orElseThrow(() -> new ResponseStatusException
+                    (HttpStatus.NOT_FOUND, "Dívida não encontrada"));
     }
 
     public DividaModel atualizar(Long id, @NonNull DividaModel novaDivida) {
         DividaModel dividaExistente = dividaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dívida não encontrada"));
+                .orElseThrow(() -> new ResponseStatusException
+                        (HttpStatus.NOT_FOUND, "Dívida não encontrada"));
 
         dividaExistente.setDescricao(novaDivida.getDescricao());
         dividaExistente.setValor(novaDivida.getValor());
@@ -45,7 +51,8 @@ public class DividaService {
 
     public void deletar (Long id){
         if (!dividaRepository.existsById(id)){
-            throw new RuntimeException("Dívida não encontrada");
+            throw new ResponseStatusException
+                    (HttpStatus.NOT_FOUND, "Dívida não encontrada");
         }
 
         dividaRepository.deleteById(id);
