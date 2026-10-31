@@ -18,8 +18,8 @@ public class DividaController {
     }
 
     @PostMapping
-    public DividaModel salvar(@RequestBody DividaModel divida ) {
-        return dividaService.salvar(divida);
+    public DividaResponseDTO salvar(@RequestBody DividaRequestDTO request ) {
+        return dividaService.salvar(request);
     }
 
     @GetMapping
