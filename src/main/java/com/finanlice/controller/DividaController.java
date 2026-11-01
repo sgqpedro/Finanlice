@@ -5,6 +5,7 @@ import com.finanlice.dto.DividaRequestDTO;
 import com.finanlice.dto.DividaResponseDTO;
 import com.finanlice.model.DividaModel;
 import com.finanlice.service.DividaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -20,23 +21,23 @@ public class DividaController {
     }
 
     @PostMapping
-    public DividaResponseDTO salvar(@RequestBody DividaRequestDTO request ) {
+    public DividaResponseDTO salvar(@Valid @RequestBody DividaRequestDTO request ) {
         return dividaService.salvar(request);
     }
 
     @GetMapping
-    public List<DividaModel> listarTodas(){
+    public List<DividaResponseDTO> listarTodas(){
         return dividaService.listarTodas();
     }
 
     @GetMapping("/{id}")
-    public DividaModel buscarPorId(@PathVariable Long id){
+    public DividaResponseDTO buscarPorId(@PathVariable Long id){
         return dividaService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public DividaModel atualizar(@PathVariable Long id, @RequestBody DividaModel novaDivida){
-        return dividaService.atualizar(id, novaDivida);
+    public DividaResponseDTO atualizar(@PathVariable Long id,@Valid @RequestBody DividaRequestDTO request){
+        return dividaService.atualizar(id, request);
     }
 
     @DeleteMapping("/{id}")

@@ -9,6 +9,7 @@ public class DividaResponseDTO {
     private String descricao;
     private BigDecimal valor;
     private BigDecimal valorPago;
+    private BigDecimal valorRestante;
     private String categoria;
     private LocalDate vencimento;
     private String status;
@@ -18,12 +19,13 @@ public class DividaResponseDTO {
     }
 
     public DividaResponseDTO(Long id, String descricao, BigDecimal valor,
-                             BigDecimal valorPago, String categoria,
+                             BigDecimal valorPago, BigDecimal valorRestante, String categoria,
                              LocalDate vencimento, String status, Long usuarioId) {
         this.id = id;
         this.descricao = descricao;
         this.valor = valor;
         this.valorPago = valorPago;
+        this.valorRestante = valor.subtract(valorPago);
         this.categoria = categoria;
         this.vencimento = vencimento;
         this.status = status;

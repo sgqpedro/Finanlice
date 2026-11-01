@@ -31,12 +31,6 @@ public class DividaService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    private DividaResponseDTO converteParaDTO(DividaModel divida){
-        return new DividaResponseDTO(
-                divida.getId(), divida.getDescricao(), divida.getValor(),
-                divida.getValorPago(), divida.getCategoria(), divida.getVencimento(), divida.getStatus(), divida.getUsuario().getId()
-        );
-    }
 
     public DividaResponseDTO salvar(DividaRequestDTO request) {
 
@@ -74,11 +68,11 @@ public class DividaService {
     }
 
     public DividaResponseDTO buscarPorId(Long id){
-        return dividaRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException
+        DividaModel divida = dividaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException
                     (HttpStatus.NOT_FOUND, "Dívida não encontrada"));
 
-        return converteParaDTO(divida);
+            return converteParaDTO(divida);
     }
 
     public DividaResponseDTO atualizar(Long id, DividaRequestDTO request) {
@@ -91,7 +85,7 @@ public class DividaService {
                 ? BigDecimal.ZERO : request.getValorPago();
 
 
-        validarPagmento(request.getValor(), valorPago);
+        validarPagamento(request.getValor(), valorPago);
 
         UsuarioModel usuario = usuarioRepository.findById(request.getUsuarioId())
                         .orElseThrow(() -> new ResponseStatusException
@@ -111,7 +105,7 @@ public class DividaService {
 
         DividaModel atualizada = dividaRepository.save(dividaExistente);
 
-        return converterParaDTO(atualizada);
+        return converteParaDTO(atualizada);
     }
 
     public void deletar (Long id){
@@ -147,6 +141,12 @@ public class DividaService {
         return "PENDENTE";
     }
 
+    private DividaResponseDTO converteParaDTO(DividaModel divida){
+        return new DividaResponseDTO(
+                divida.getId(), divida.getDescricao(), divida.getValor(),
+                divida.getValorPago(), divida.getCategoria(), divida.getVencimento(), divida.getStatus(), divida.getUsuario().getId()
+        );
+    }
 
 
 }
