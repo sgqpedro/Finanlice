@@ -1,6 +1,8 @@
 package com.finanlice.controller;
 
 
+import com.finanlice.dto.DividaRequestDTO;
+import com.finanlice.dto.DividaResponseDTO;
 import com.finanlice.model.DividaModel;
 import com.finanlice.service.DividaService;
 import org.springframework.web.bind.annotation.*;

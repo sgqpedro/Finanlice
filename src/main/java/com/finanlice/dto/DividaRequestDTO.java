@@ -1,16 +1,36 @@
 package com.finanlice.dto;
 
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class DividaRequestDTO {
 
+
+    @NotBlank(message = "Descrição é obrigatória")
+    @Size(max = 100, message = "Descrição deve ter no máximo 100 caracteres")
     private String descricao;
+
+    @NotNull(message = "Valor deve ser preenchido!")
+    @DecimalMin(value = "0.01", message = "o valor não pode ser negativo")
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal valor;
+
+    @DecimalMin(value = "0.01", message = "O valor pago não pode ser negativo")
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal valorPago;
+
+    @NotBlank(message = "Categoria é obrigatória")
     private String categoria;
+
+    @NotNull(message = "Vencimento é obrigatório")
     private LocalDate vencimento;
+
+
     private String status;
+
+    @NotNull(message = "Usuário é obrigatório")
     private Long usuarioId;
 
 
