@@ -7,11 +7,14 @@ import com.finanlice.model.DividaModel;
 import com.finanlice.model.UsuarioModel;
 import com.finanlice.repository.DividaRepository;
 import com.finanlice.repository.UsuarioRepository;
+import org.apache.coyote.Response;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -28,57 +31,87 @@ public class DividaService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    private DividaResponseDTO converteParaDTO(DividaModel divida){
+        return new DividaResponseDTO(
+                divida.getId(), divida.getDescricao(), divida.getValor(),
+                divida.getValorPago(), divida.getCategoria(), divida.getVencimento(), divida.getStatus(), divida.getUsuario().getId()
+        );
+    }
+
     public DividaResponseDTO salvar(DividaRequestDTO request) {
+
         UsuarioModel usuario = usuarioRepository.findById(request.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
 
 
+        BigDecimal valorPago = request.getValorPago() == null
+                ? BigDecimal.ZERO : request.getValorPago();
+
+        validarPagamento(request.getValor(), valorPago);
+
         DividaModel divida = new DividaModel();
+
         divida.setDescricao(request.getDescricao());
         divida.setValor(request.getValor());
         divida.setValorPago(request.getValorPago());
         divida.setCategoria(request.getCategoria());
         divida.setVencimento(request.getVencimento());
-        divida.setStatus(request.getStatus());
         divida.setUsuario(usuario);
+
+        divida.setStatus(calcularStatus(request.getValor(), valorPago, request.getVencimento()));
 
         DividaModel salva = dividaRepository.save(divida);
 
-        return new DividaResponseDTO(
-                salva.getId(),
-                salva.getDescricao(),
-                salva.getValor(),
-                salva.getValorPago(),
-                salva.getCategoria(),
-                salva.getVencimento(),
-                salva.getStatus(),
-                salva.getUsuario().getId()
-        );
+        return converteParaDTO(salva);
 
     }
 
-    public List<DividaModel> listarTodas(){
-        return dividaRepository.findAll();
+    public List<DividaResponseDTO> listarTodas(){
+        return dividaRepository.findAll()
+                .stream()
+                .map(this::converteParaDTO)
+                .toList();
     }
 
-    public DividaModel buscarPorId(Long id){return dividaRepository.findById(id)
+    public DividaResponseDTO buscarPorId(Long id){
+        return dividaRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException
                     (HttpStatus.NOT_FOUND, "Dívida não encontrada"));
+
+        return converteParaDTO(divida);
     }
 
-    public DividaModel atualizar(Long id, @NonNull DividaModel novaDivida) {
+    public DividaResponseDTO atualizar(Long id, DividaRequestDTO request) {
+
         DividaModel dividaExistente = dividaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException
                         (HttpStatus.NOT_FOUND, "Dívida não encontrada"));
 
-        dividaExistente.setDescricao(novaDivida.getDescricao());
-        dividaExistente.setValor(novaDivida.getValor());
-        dividaExistente.setValorPago(novaDivida.getValorPago());
-        dividaExistente.setCategoria(novaDivida.getCategoria());
-        dividaExistente.setVencimento(novaDivida.getVencimento());
-        dividaExistente.setStatus(novaDivida.getStatus());
+        BigDecimal valorPago = request.getValorPago() == null
+                ? BigDecimal.ZERO : request.getValorPago();
 
-        return dividaRepository.save(dividaExistente);
+
+        validarPagmento(request.getValor(), valorPago);
+
+        UsuarioModel usuario = usuarioRepository.findById(request.getUsuarioId())
+                        .orElseThrow(() -> new ResponseStatusException
+                                (HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        dividaExistente.setDescricao(request.getDescricao());
+        dividaExistente.setValor(request.getValor());
+        dividaExistente.setValorPago(request.getValorPago());
+        dividaExistente.setCategoria(request.getCategoria());
+        dividaExistente.setVencimento(request.getVencimento());
+
+        dividaExistente.setStatus(calcularStatus(
+                request.getValor(),
+                valorPago,
+                request.getVencimento()
+        ));
+
+        DividaModel atualizada = dividaRepository.save(dividaExistente);
+
+        return converterParaDTO(atualizada);
     }
 
     public void deletar (Long id){
@@ -89,4 +122,31 @@ public class DividaService {
 
         dividaRepository.deleteById(id);
     }
+
+
+    private void validarPagamento(BigDecimal valor, BigDecimal valorPago){
+         if (valorPago.compareTo(valor) > 0 ){
+             throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "O valor não pode ser maior que a dívida"
+             );
+         }
+    }
+
+    private String calcularStatus(BigDecimal valor, BigDecimal valorPago, LocalDate vencimento){
+        if (valorPago.compareTo(valor) == 0 ){
+            return "PAGA";
+        }
+
+        if (vencimento.isBefore(LocalDate.now())){
+            return "ATRASADA";
+        }
+
+        if (valor.compareTo(valor) > 0){
+            return "PARCIAL";
+        }
+
+        return "PENDENTE";
+    }
+
+
+
 }
