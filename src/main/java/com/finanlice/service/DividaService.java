@@ -7,8 +7,6 @@ import com.finanlice.model.DividaModel;
 import com.finanlice.model.UsuarioModel;
 import com.finanlice.repository.DividaRepository;
 import com.finanlice.repository.UsuarioRepository;
-import org.apache.coyote.Response;
-import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -47,7 +45,7 @@ public class DividaService {
 
         divida.setDescricao(request.getDescricao());
         divida.setValor(request.getValor());
-        divida.setValorPago(request.getValorPago());
+        divida.setValorPago(valorPago);
         divida.setCategoria(request.getCategoria());
         divida.setVencimento(request.getVencimento());
         divida.setUsuario(usuario);
@@ -68,6 +66,7 @@ public class DividaService {
     }
 
     public DividaResponseDTO buscarPorId(Long id){
+
         DividaModel divida = dividaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException
                     (HttpStatus.NOT_FOUND, "Dívida não encontrada"));
@@ -93,7 +92,7 @@ public class DividaService {
 
         dividaExistente.setDescricao(request.getDescricao());
         dividaExistente.setValor(request.getValor());
-        dividaExistente.setValorPago(request.getValorPago());
+        dividaExistente.setValorPago(valorPago);
         dividaExistente.setCategoria(request.getCategoria());
         dividaExistente.setVencimento(request.getVencimento());
 
@@ -134,17 +133,25 @@ public class DividaService {
             return "ATRASADA";
         }
 
-        if (valor.compareTo(valor) > 0){
+        if (valorPago.compareTo(BigDecimal.ZERO) > 0){
             return "PARCIAL";
         }
 
         return "PENDENTE";
     }
 
-    private DividaResponseDTO converteParaDTO(DividaModel divida){
+    private DividaResponseDTO converteParaDTO (DividaModel divida) {
         return new DividaResponseDTO(
-                divida.getId(), divida.getDescricao(), divida.getValor(),
-                divida.getValorPago(), divida.getCategoria(), divida.getVencimento(), divida.getStatus(), divida.getUsuario().getId()
+                divida.getId(),
+                divida.getDescricao(),
+                divida.getValor(),
+                divida.getValorPago(),
+                divida.getValor().subtract(divida.getValorPago()),
+                divida.getCategoria(),
+                divida.getVencimento(),
+                divida.getStatus(),
+                divida.getUsuario().getId()
+               // divida.getValorRestante()
         );
     }
 

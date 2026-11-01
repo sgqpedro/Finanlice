@@ -15,9 +15,6 @@ public class DividaResponseDTO {
     private String status;
     private Long usuarioId;
 
-    public DividaResponseDTO() {
-    }
-
     public DividaResponseDTO(Long id, String descricao, BigDecimal valor,
                              BigDecimal valorPago, BigDecimal valorRestante, String categoria,
                              LocalDate vencimento, String status, Long usuarioId) {
