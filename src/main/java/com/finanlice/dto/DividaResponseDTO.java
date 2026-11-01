@@ -93,4 +93,12 @@ public class DividaResponseDTO {
     public void setUsuarioId(Long usuarioId) {
         this.usuarioId = usuarioId;
     }
+
+    public BigDecimal getValorRestante() {
+        return valorRestante;
+    }
+
+    public void setValorRestante(BigDecimal valorRestante) {
+        this.valorRestante = valorRestante;
+    }
 }
