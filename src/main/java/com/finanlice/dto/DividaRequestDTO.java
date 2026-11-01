@@ -28,7 +28,6 @@ public class DividaRequestDTO {
     private LocalDate vencimento;
 
 
-    private String status;
 
     @NotNull(message = "Usuário é obrigatório")
     private Long usuarioId;
@@ -75,14 +74,6 @@ public class DividaRequestDTO {
 
     public void setVencimento(LocalDate vencimento){
         this.vencimento = vencimento;
-    }
-
-    public String getStatus(){
-        return status;
-    }
-
-    public void setStatus(String status){
-        this.status = status;
     }
 
     public Long getUsuarioId() {
