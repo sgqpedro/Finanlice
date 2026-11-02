@@ -6,14 +6,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
+// @Entity informa ao JPA que esta classe deve ser salva e carregada do banco de dados.
 @Entity
+// @Table define o nome da tabela que armazenará os registros de dívida.
 @Table(name = "dividas")
 
 public class DividaModel{
 
+    // @Id marca a chave primária; @GeneratedValue deixa o banco gerar seu valor.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
     private String descricao;
     private BigDecimal valor;
@@ -22,13 +24,18 @@ public class DividaModel{
     private LocalDate vencimento;
     private String status;
 
+    // @ManyToOne indica que várias dívidas podem pertencer ao mesmo usuário.
     @ManyToOne
+    // @JoinColumn mapeia a relação para a coluna usuario_id nesta tabela.
     @JoinColumn(name = "usuario_id")
     private UsuarioModel usuario;
 
+    // Construtor sem parâmetros usado pelo JPA ao carregar a entidade do banco.
     public DividaModel(){}
 
-    public DividaModel(Long id, String descricao, BigDecimal valor, BigDecimal valorPago, String categoria, LocalDate vencimento, String status){
+    // Construtor que permite criar uma dívida já informando seus dados principais.
+    public DividaModel(Long id, String descricao, BigDecimal valor, BigDecimal valorPago,
+                       String categoria, LocalDate vencimento, String status){
         this.id = id;
         this.descricao = descricao;
         this.valor = valor;
@@ -39,6 +46,8 @@ public class DividaModel{
 
     }
 
+
+    // Getters e Setters.
     public Long getId(){ return id;}
 
     public void setId(Long id){

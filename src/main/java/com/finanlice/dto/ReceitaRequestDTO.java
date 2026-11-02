@@ -3,6 +3,7 @@ package com.finanlice.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+// DTO (Data Transfer Object) que recebe os dados enviados para cadastrar uma receita.
 public class ReceitaRequestDTO {
 
     private String nome;
@@ -11,10 +12,11 @@ public class ReceitaRequestDTO {
     private LocalDateTime dataRecebimento;
     private Long usuarioId;
 
-
+    // Construtor vazio, útil para frameworks que criam o DTO ao receber uma requisição.
     public ReceitaRequestDTO(){
     }
 
+    // Construtor para criar o DTO já preenchido com os dados da receita.
     public ReceitaRequestDTO
             (String nome, BigDecimal valorReceita, String tipo , LocalDateTime dataRecebimento, Long usuarioId){
             this.nome = nome;

@@ -3,6 +3,7 @@ package com.finanlice.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+// DTO (Data Transfer Object) que organiza os dados da dívida enviados na resposta da API.
 public class DividaResponseDTO {
 
     private Long id;
@@ -15,6 +16,7 @@ public class DividaResponseDTO {
     private String status;
     private Long usuarioId;
 
+    // Cria a resposta com os dados da dívida e calcula o saldo restante.
     public DividaResponseDTO(Long id, String descricao, BigDecimal valor,
                              BigDecimal valorPago, BigDecimal valorRestante, String categoria,
                              LocalDate vencimento, String status, Long usuarioId) {
