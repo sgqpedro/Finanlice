@@ -1,7 +1,10 @@
 package com.finanlice.controller;
 
-import com.finanlice.model.UsuarioModel;
+import com.finanlice.dto.UsuarioRequestDTO;
+import com.finanlice.dto.UsuarioResponseDTO;
+
 import com.finanlice.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -18,25 +21,25 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public UsuarioModel salvar(@RequestBody UsuarioModel usuario){
-        return usuarioService.salvar(usuario);
+    public UsuarioResponseDTO salvar(@Valid @RequestBody UsuarioRequestDTO request){
+        return usuarioService.salvar(request);
     }
 
 
     @GetMapping
-    public List<UsuarioModel> listarTodos(){
+    public List<UsuarioResponseDTO> listarTodos(){
         return usuarioService.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public UsuarioModel buscarPorId(@PathVariable Long id){
+    public UsuarioResponseDTO buscarPorId(@PathVariable Long id){
         return usuarioService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public UsuarioModel atualizar(@PathVariable Long id, @RequestBody UsuarioModel novoUsuario){
+    public UsuarioResponseDTO atualizar(@PathVariable Long id,@Valid @RequestBody UsuarioRequestDTO request){
 
-        return usuarioService.atualizar(id,novoUsuario);
+        return usuarioService.atualizar(id,request);
     }
 
     @DeleteMapping("/{id}")

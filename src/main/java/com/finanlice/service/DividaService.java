@@ -90,6 +90,7 @@ public class DividaService {
                         .orElseThrow(() -> new ResponseStatusException
                                 (HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
+        dividaExistente.setUsuario(usuario);
         dividaExistente.setDescricao(request.getDescricao());
         dividaExistente.setValor(request.getValor());
         dividaExistente.setValorPago(valorPago);

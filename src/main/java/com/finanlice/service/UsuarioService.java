@@ -1,5 +1,7 @@
 package com.finanlice.service;
 
+import com.finanlice.dto.UsuarioRequestDTO;
+import com.finanlice.dto.UsuarioResponseDTO;
 import com.finanlice.model.UsuarioModel;
 import com.finanlice.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
@@ -18,30 +20,52 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public UsuarioModel salvar(UsuarioModel usuario){
-        return usuarioRepository.save(usuario);
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO request){
+        UsuarioModel usuario = new UsuarioModel();
+        usuario.setNome(request.getNome());
+        usuario.setEmail(request.getEmail());
+        usuario.setSenha(request.getSenha());
+
+        UsuarioModel salvo = usuarioRepository.save(usuario);
+        return new UsuarioResponseDTO(salvo.getId(), salvo.getNome(), salvo.getEmail());
     }
 
-    public List<UsuarioModel> listarTodos(){
-        return usuarioRepository.findAll();
+    public List<UsuarioResponseDTO> listarTodos(){
+        return usuarioRepository.findAll()
+                .stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
-    public UsuarioModel buscarPorId(Long id){
-        return usuarioRepository.findById(id)
+
+
+    public UsuarioResponseDTO buscarPorId(Long id){
+
+        UsuarioModel usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException
                         (HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+                return new UsuarioResponseDTO(
+                        usuario.getId(),
+                        usuario.getNome(),
+                        usuario.getEmail()
+                );
+
     }
 
-    public UsuarioModel atualizar(Long id, UsuarioModel novoUsuario){
+    public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO request){
         UsuarioModel usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException
                         (HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        usuarioExistente.setNome(novoUsuario.getNome());
-        usuarioExistente.setEmail(novoUsuario.getEmail());
-        usuarioExistente.setSenha(novoUsuario.getSenha());
+        usuarioExistente.setNome(request.getNome());
+        usuarioExistente.setEmail(request.getEmail());
+        usuarioExistente.setSenha(request.getSenha());
 
-        return usuarioRepository.save(usuarioExistente);
+            UsuarioModel atualizado = usuarioRepository.save(usuarioExistente);
+
+        return converterParaDTO(atualizado);
+
     }
 
     public void deletar(Long id){
@@ -52,5 +76,13 @@ public class UsuarioService {
         }
         
         usuarioRepository.deleteById(id);
+    }
+
+    private UsuarioResponseDTO converterParaDTO(UsuarioModel usuario){
+        return new UsuarioResponseDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail()
+        );
     }
 }
