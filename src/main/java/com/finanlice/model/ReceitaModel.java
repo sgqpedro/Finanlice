@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 // @Entity informa ao JPA que esta classe representa dados persistidos no banco.
 @Entity
@@ -76,6 +75,14 @@ public class ReceitaModel {
 
         public void setDataRecebimento(LocalDateTime dataRecebimento){
             this.dataRecebimento = dataRecebimento;
+        }
+
+        public UsuarioModel getUsuario(){
+            return usuario;
+        }
+
+        public void setUsuario(UsuarioModel usuario){
+            this.usuario = usuario;
         }
 
 

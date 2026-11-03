@@ -1,8 +1,8 @@
 package com.finanlice.controller;
-
-
-import com.finanlice.model.ReceitaModel;
+import com.finanlice.dto.ReceitaRequestDTO;
+import com.finanlice.dto.ReceitaResponseDTO;
 import com.finanlice.service.ReceitaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,34 +21,34 @@ public class ReceitaController {
         this.receitaService = receitaService;
     }
 
-    // POST /receitas: recebe os dados de uma receita e solicita sua criação.
+    // POST /receitas: recebe e valida os dados da receita pelo DTO de requisição.
     @PostMapping
-    public ReceitaModel salvar (@RequestBody ReceitaModel receita){
-        return receitaService.salvar(receita);
+    public ReceitaResponseDTO salvar(@Valid @RequestBody ReceitaRequestDTO request){
+        return receitaService.salvar(request);
     }
 
-    // GET /receitas: retorna a lista de receitas.
+    // GET /receitas: retorna a lista de receitas no formato do DTO de resposta.
     @GetMapping
-    public List<ReceitaModel> listarTodas(){
+    public List<ReceitaResponseDTO> listarTodas(){
         return receitaService.listarTodas();
     }
 
-    // GET /receitas/{id}: busca uma receita pelo identificador informado na URL.
+    // GET /receitas/{id}: busca uma receita pelo identificador e devolve o DTO de resposta.
     @GetMapping("/{id}")
-    public ReceitaModel buscarPorId(@PathVariable Long id) {
+    public ReceitaResponseDTO buscarPorId(@PathVariable Long id) {
         return receitaService.buscarPorId(id);
     }
 
-    // PUT /receitas/{id}: recebe os novos dados e atualiza a receita indicada.
+    // PUT /receitas/{id}: recebe e valida os novos dados pelo DTO de requisição.
     @PutMapping("/{id}")
-    public ReceitaModel atualizar(
+    public ReceitaResponseDTO atualizar(
             @PathVariable Long id,
-            @RequestBody ReceitaModel novaReceita) {
+            @Valid @RequestBody ReceitaRequestDTO request) {
 
-        return receitaService.atualizar(id, novaReceita);
+        return receitaService.atualizar(id, request);
     }
 
-    // DELETE /receitas/{id}: remove a receita indicada pelo identificador.
+    // DELETE /receitas/{id}: remove a receita indicada pelo identificador da URL.
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
         receitaService.deletar(id);

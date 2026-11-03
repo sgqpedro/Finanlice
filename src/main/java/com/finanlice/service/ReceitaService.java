@@ -1,68 +1,87 @@
 package com.finanlice.service;
 
-
+import com.finanlice.dto.ReceitaRequestDTO;
+import com.finanlice.dto.ReceitaResponseDTO;
 import com.finanlice.model.ReceitaModel;
+import com.finanlice.model.UsuarioModel;
 import com.finanlice.repository.ReceitaRepository;
+import com.finanlice.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-// @Service marca esta classe como componente que executa operações relacionadas às receitas.
 @Service
 public class ReceitaService {
 
-    // Repositório usado para salvar, buscar e excluir receitas no banco.
     private final ReceitaRepository receitaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    // O Spring fornece o repositório pelo construtor (injeção de dependência).
-    public ReceitaService(ReceitaRepository receitaRepository){
-        this.receitaRepository = receitaRepository;}
-
-    // Salva uma nova receita no banco e retorna a entidade salva.
-    public ReceitaModel salvar(ReceitaModel receita){
-        return receitaRepository.save(receita);
+    public ReceitaService(ReceitaRepository receitaRepository, UsuarioRepository usuarioRepository) {
+        this.receitaRepository = receitaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
-    // Busca e retorna todas as receitas armazenadas.
-    public List<ReceitaModel> listarTodas(){
-        return receitaRepository.findAll();
+    public ReceitaResponseDTO salvar(ReceitaRequestDTO request) {
+        UsuarioModel usuario = buscarUsuario(request.getUsuarioId());
+
+        ReceitaModel receita = new ReceitaModel();
+        preencherReceita(receita, request, usuario);
+
+        return converterParaDTO(receitaRepository.save(receita));
     }
 
-    // Busca uma receita pelo identificador; lança uma exceção se não for encontrada.
-    public ReceitaModel buscarPorId(Long id){
-        return receitaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Receita não encontrada"));
-
+    public List<ReceitaResponseDTO> listarTodas() {
+        return receitaRepository.findAll()
+                .stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
-    // Atualiza os dados de uma receita existente e salva as alterações.
-    public ReceitaModel atualizar(Long id, ReceitaModel novaReceita) {
-
-        // Procura o registro atual antes de alterar seus dados.
-        ReceitaModel receitaExistente = receitaRepository.findById(id)
+    public ReceitaResponseDTO buscarPorId(Long id) {
+        ReceitaModel receita = receitaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
-
-        // Copia para a entidade existente os valores recebidos na atualização.
-        receitaExistente.setNome(novaReceita.getNome());
-        receitaExistente.setValorReceita(novaReceita.getValorReceita());
-        receitaExistente.setTipo(novaReceita.getTipo());
-        receitaExistente.setDataRecebimento(novaReceita.getDataRecebimento());
-
-        // Persiste a entidade atualizada e devolve o resultado.
-        return receitaRepository.save(receitaExistente);
+        return converterParaDTO(receita);
     }
 
+    public ReceitaResponseDTO atualizar(Long id, ReceitaRequestDTO request) {
+        ReceitaModel receita = receitaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
+        UsuarioModel usuario = buscarUsuario(request.getUsuarioId());
 
-    // Exclui a receita indicada; se ela não existir, responde com erro HTTP 404.
-    public void deletar(Long id){
-        if (!receitaRepository.existsById(id)){
+        preencherReceita(receita, request, usuario);
+        return converterParaDTO(receitaRepository.save(receita));
+    }
+
+    public void deletar(Long id) {
+        if (!receitaRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada");
         }
-
         receitaRepository.deleteById(id);
     }
 
+    private UsuarioModel buscarUsuario(Long usuarioId) {
+        return usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+    }
 
+    private void preencherReceita(ReceitaModel receita, ReceitaRequestDTO request, UsuarioModel usuario) {
+        receita.setNome(request.getNome());
+        receita.setValorReceita(request.getValorReceita());
+        receita.setTipo(request.getTipo());
+        receita.setDataRecebimento(request.getDataRecebimento());
+        receita.setUsuario(usuario);
+    }
+
+    private ReceitaResponseDTO converterParaDTO(ReceitaModel receita) {
+        return new ReceitaResponseDTO(
+                receita.getId(),
+                receita.getNome(),
+                receita.getValorReceita(),
+                receita.getTipo(),
+                receita.getDataRecebimento(),
+                receita.getUsuario() == null ? null : receita.getUsuario().getId()
+        );
+    }
 }
