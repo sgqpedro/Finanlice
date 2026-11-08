@@ -51,4 +51,15 @@ public class JwtService {
             .getSubject();
     }
 
+    public boolean validarToken(String token, UserDetails usuario) {
+
+        try {
+            String email = extrairEmail(token);
+            return email != null && email.equals(usuario.getUsername());
+
+        } catch (io.jsonwebtoken.JwtException | IllegalArgumentException a) {
+            return false;
+        }
+    }
+
 }
