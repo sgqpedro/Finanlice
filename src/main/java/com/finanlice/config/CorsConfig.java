@@ -1,4 +1,4 @@
 package com.finanlice.config;
 
-public class config {
+public class CorsConfig {
 }

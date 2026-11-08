@@ -5,6 +5,7 @@ import com.finanlice.dto.UsuarioResponseDTO;
 import com.finanlice.model.UsuarioModel;
 import com.finanlice.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,9 +18,13 @@ public class UsuarioService {
     // Repositório usado para salvar e consultar usuários no banco.
     private final UsuarioRepository usuarioRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     // O Spring fornece o repositório pelo construtor (injeção de dependência).
-    public UsuarioService(UsuarioRepository usuarioRepository){
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder){
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     // Cria um usuário a partir dos dados recebidos e devolve sua versão de resposta.
@@ -27,7 +32,7 @@ public class UsuarioService {
         UsuarioModel usuario = new UsuarioModel();
         usuario.setNome(request.getNome());
         usuario.setEmail(request.getEmail());
-        usuario.setSenha(request.getSenha());
+        usuario.setSenha(passwordEncoder.encode(request.getSenha()));
 
         // Persiste o usuário e converte para DTO, que não inclui a senha na resposta.
         UsuarioModel salvo = usuarioRepository.save(usuario);
@@ -66,7 +71,7 @@ public class UsuarioService {
 
         usuarioExistente.setNome(request.getNome());
         usuarioExistente.setEmail(request.getEmail());
-        usuarioExistente.setSenha(request.getSenha());
+        usuarioExistente.setSenha(passwordEncoder.encode(request.getSenha()));
 
         // Salva as alterações no banco.
         UsuarioModel atualizado = usuarioRepository.save(usuarioExistente);

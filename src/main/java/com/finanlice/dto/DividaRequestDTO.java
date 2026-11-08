@@ -20,9 +20,9 @@ public class DividaRequestDTO {
     @Digits(integer = 10, fraction = 2)
     private BigDecimal valor;
 
-    // Valor já pago; pode ficar sem preenchimento, mas se informado deve ser pelo menos 0,01.
+    // Valor já pago; pode ficar sem preenchimento, mas se informado deve ser pelo menos 0,00.
     // Também permite até 10 dígitos inteiros e 2 casas decimais.
-    @DecimalMin(value = "0.01", message = "O valor pago não pode ser negativo")
+    @DecimalMin(value = "0.00", message = "O valor pago não pode ser negativo")
     @Digits(integer = 10, fraction = 2)
     private BigDecimal valorPago;
 

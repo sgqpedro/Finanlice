@@ -14,7 +14,7 @@ public class ReceitaRequestDTO {
     private String nome;
 
     @NotNull(message = "O valor da Receita deve ser obrigatório")
-    @DecimalMin( value = "0.01", message = "o valor não deve ser negativo")
+    @DecimalMin( value = "0.00", message = "o valor não deve ser negativo")
     @Digits(integer = 10, fraction = 2)
     private BigDecimal valorReceita;
 

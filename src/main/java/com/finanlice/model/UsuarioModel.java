@@ -18,12 +18,14 @@ public class UsuarioModel {
     private Long id;
 
     // Senha usada para autenticação. A aplicação deve armazená-la de forma segura.
+    @Column(nullable = false)
     private String senha;
 
     // Nome do usuário.
     private String nome;
 
     // Endereço de e-mail do usuário.
+    @Column (nullable = false, unique = true)
     private String email;
 
     // Lista de dívidas deste usuário. mappedBy indica que a relação é definida
