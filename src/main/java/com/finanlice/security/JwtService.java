@@ -23,7 +23,6 @@ public class JwtService {
 
         this.signinKey = Keys.hmacShaKeyFor(keyBytes);
     }
-
     public String gerarToken(UserDetails usuario){
 
         Date agora = new Date();
